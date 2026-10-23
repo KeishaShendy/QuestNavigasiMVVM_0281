@@ -1,23 +1,9 @@
 package com.example.pertemuan6.view
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,9 +15,14 @@ import com.example.pertemuan6.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormIsian(
-    jenisK: List<String> = listOf("Laki-laki", "Perempuan"),
     OnSubmitBtnClick: () -> Unit
 ) {
+    // State agar form bisa diketik dan dipilih
+    var nama by remember { mutableStateOf("") }
+    var alamat by remember { mutableStateOf("") }
+    var jenisKelaminTerpilih by remember { mutableStateOf("Laki-laki") }
+    val jenisK = listOf("Laki-laki", "Perempuan")
+
     Scaffold(modifier = Modifier,
         topBar = {
             TopAppBar(
@@ -47,50 +38,63 @@ fun FormIsian(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Input Nama Lengkap (Bisa diketik)
             OutlinedTextField(
-                value = "",
+                value = nama,
+                onValueChange = { nama = it },
                 singleLine = true,
-                modifier = Modifier
-                    .padding(top = 20.dp)
-                    .width(250.dp),
+                modifier = Modifier.padding(top = 20.dp).width(250.dp),
                 label = { Text(text = "Nama Lengkap") },
-                onValueChange = {},
             )
+
+            // Garis Pertama (Atas)
+            HorizontalDivider(
+                modifier = Modifier.padding(20.dp).width(250.dp),
+                thickness = 1.dp,
+                color = Color.Red
+            )
+
 
             Row {
                 jenisK.forEach { item ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .selectable(
+                                selected = (jenisKelaminTerpilih == item),
+                                onClick = { jenisKelaminTerpilih = item }
+                            )
+                            .padding(end = 16.dp)
+                    ) {
                         RadioButton(
-                            selected = false,
-                            onClick = { item }
+                            selected = (jenisKelaminTerpilih == item),
+                            onClick = { jenisKelaminTerpilih = item }
                         )
                         Text(text = item)
                     }
                 }
             }
 
+            // Garis Kedua (Bawah)
             HorizontalDivider(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .width(250.dp),
+                modifier = Modifier.padding(20.dp).width(250.dp),
                 thickness = 1.dp,
                 color = Color.Red
             )
 
+            // Input Alamat (Bisa diketik)
             OutlinedTextField(
-                value = "",
+                value = alamat,
+                onValueChange = { alamat = it },
                 singleLine = true,
-                modifier = Modifier
-                    .width(250.dp),
+                modifier = Modifier.width(250.dp),
                 label = { Text(text = "Alamat") },
-                onValueChange = {},
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             Button(
-                modifier = Modifier.fillMaxWidth(1f)
-                    .padding(all = 25.dp),
+                modifier = Modifier.fillMaxWidth(1f).padding(all = 25.dp),
                 onClick = OnSubmitBtnClick
             ) {
                 Text(stringResource(id = R.string.submit))
