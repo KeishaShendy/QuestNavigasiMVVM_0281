@@ -57,3 +57,16 @@ fun TampilData(
                     HorizontalDivider(thickness = 1.dp, color = Color.Cyan)
                 }
             }
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    onClick = onBackBtnClick
+                ) {
+                    Text(text = stringResource(id = R.string.back))
+                }
+            }
+        }
+    }
+}
